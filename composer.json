@@ -1,0 +1,23 @@
+{
+    "name": "rawroland/feiertage",
+    "description": "A package for dealing with German public holidays.",
+    "autoload": {
+        "psr-4": {"Feiertage\\": "src"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Feiertage\\": "tests"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roland Awemo",
+            "email": "rawroro@gmail.com"
+        }
+    ],
+    "require": {
+        "cakephp/collection": "^3.2"
+    }
+}
