@@ -48,12 +48,12 @@ class Holidays
         'assumption' => [
             'name' => 'Mariä Himmelfahrt(stag)',
             'date' => '08-15',
-            'states' => []
+            'states' => ['BY_Katholisch', '']
         ],
         'unity_day' => [
             'name' => 'Tag der Deutschen Einheit',
             'date' => '10-03',
-            'states' => []
+            'states' => ['BY_Katholisch', 'SL']
         ],
         'reformation_day' => [
             'name' => 'Neujahr',
