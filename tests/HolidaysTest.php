@@ -20,13 +20,13 @@ class HolidaysTest extends \PHPUnit_Framework_TestCase
     {
           $holidays = new Holidays(new \DateTime('2017-01-01'));
           $fixedHolidays = $holidays->setFixedHolidays()->getFixedHolidays();
-          $this->assertCount(10, $fixedHolidays, 'The wwrong number of fixed holidays is returned.');
+          $this->assertCount(10, $fixedHolidays->toArray(), 'The wrong number of fixed holidays is returned.');
     }
 
     public function testFlexibleHolidaysAreCorrectlySet()
     {
         $holidays = new Holidays();
         $flexibleHolidays = $holidays->setFlexibleHolidays()->getFlexibleHolidays();
-        $this->assertCount(6, $flexibleHolidays, 'The wrong number of flexible holidays is returned.');
+        $this->assertCount(6, $flexibleHolidays->toArray(), 'The wrong number of flexible holidays is returned.');
     }
 }
