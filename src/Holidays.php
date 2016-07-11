@@ -17,6 +17,11 @@ class Holidays
     private $year;
 
     /**
+    * @var \DateTime
+    */
+    private $easterDate;
+
+    /**
     * @var Cake\Collection\Collection
     */
     private $fixedHolidays;
@@ -77,6 +82,43 @@ class Holidays
             'states' => []
         ],
     ];
+    private $flexibleHolidays;
+
+    /**
+     * @var array
+     */
+    private $flexibleHolidaysConfig = [
+        'day_of_repentance' => [
+            'name' => 'Buß- und Bettag',
+            'special' => true,
+            'states' => ['SN', 'BY']
+        ],
+        'good_friday' => [
+            'name' => 'Karfreitag',
+            'easter_difference' => '-2',
+            'states' => []
+        ],
+        'easter_monday' => [
+            'name' => 'Ostermontag',
+            'easter_difference' => '+1',
+            'states' => []
+        ],
+        'ascension' => [
+            'name' => '(Christi-)Himmelfahrt(stag)',
+            'easter_difference' => '+39',
+            'states' => []
+        ],
+        'pentecost_monday' => [
+            'name' => 'Pfingstsonntag',
+            'easter_difference' => '+50',
+            'states' => []
+        ],
+        'corpus_christi' => [
+            'name' => 'Fronleichnam(stag)',
+            'easter_difference' => '+60',
+            'states' => []
+        ],
+    ];
 
     public function __construct(\DateTime $date = null)
     {
@@ -85,6 +127,7 @@ class Holidays
         }
         $this->date = $date;
         $this->year = $date->format('Y');
+        $this->easterDate = (new \DateTime())->setTimestamp(easter_date($this->year));
     }
 
     public function setFixedHolidays()
@@ -104,6 +147,39 @@ class Holidays
     public function getFixedHolidays()
     {
         return $this->fixedHolidays;
+    }
+
+    public function setFlexibleHolidays()
+    {
+        $flexibleHolidays = new Collection($this->flexibleHolidaysConfig);
+
+        $repentanceDate = $flexibleHolidays->filter(function($holiday) {
+            return array_key_exists('special', $holiday);
+        })->map(function ($holiday) {
+            return new Holiday(
+                $holiday['name'],
+                (new \DateTime('2016-11-23'))->modify('last Wednesday'),
+                $holiday['states']
+            );
+        });
+        $otherHolidays = $flexibleHolidays->filter(function($holiday) {
+            return !array_key_exists('special', $holiday);
+        })->map(function ($holiday) {
+            $easterDate = (new \DateTime())->setTimestamp(easter_date($this->year));
+            return new Holiday(
+                $holiday['name'],
+                $easterDate->modify("{$holiday['easter_difference']} days"),
+                $holiday['states']
+            );
+        });
+        $this->flexibleHolidays = $otherHolidays->append($repentanceDate);
+
+        return $this;
+    }
+
+    public function getFlexibleHolidays()
+    {
+        return $this->flexibleHolidays;
     }
 
 }
